@@ -12,9 +12,10 @@ systemctl restart apache2.service
 
 #prepare install magento
 mkdir /var/www/magento
-mv /tmp/Magento-CE.tar.gz /var/www/magento/
 cd /var/www/magento/
+wget https://github.com/ysirawit/magento/raw/master/Magento-CE.tar.gz
 tar -xvzf Magento-CE.tar.gz
+cd /var/www/
 chown www-data:www-data -R /var/www/magento/
 
 #gen DB password
@@ -40,6 +41,16 @@ echo 'Database Server Username : magento ' >> ~/install_config
 echo 'Database Server Password : '$DB_PASSWORD' ' >> ~/install_config
 echo 'Database Name : magento ' >> ~/install_config
 echo 'Table prefix : (none) ' >> ~/install_config
+
+#write out current crontab
+crontab -l > mycron
+#echo new cron into cron file
+echo "* * * * * /usr/bin/php /var/www/magento/bin/magento cron:run | grep -v "Ran jobs by schedule" >> /var/www/magento/var/log/magento.cron.log" >> mycron
+echo "* * * * * /usr/bin/php /var/www/magento/update/cron.php >> /var/www/magento/var/log/update.cron.log" >> mycron
+echo "* * * * * /usr/bin/php /var/www/magento/bin/magento setup:cron:run >> /var/www/magento/var/log/setup.cron.log" >> mycron
+#install new cron file
+crontab mycron
+rm mycron
 
 #finish
 echo 'DONE!!!!!!!!!!! :)'
