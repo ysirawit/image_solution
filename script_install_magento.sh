@@ -58,7 +58,7 @@ echo "* * * * * /usr/bin/php /var/www/magento/bin/magento setup:cron:run >> /var
 #install new cron file
 crontab -u magento mycron
 rm mycron
-chown www-data:www-data -R /var/www/magento/
+chmod g+w -R generated/
 
 #finish
 echo 'DONE!!!!!!!!!!! :)'
