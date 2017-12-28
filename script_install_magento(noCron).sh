@@ -37,6 +37,7 @@ find var vendor pub/static pub/media app/etc -type f -exec chmod g+w {} \;
 find var vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} \;
 chown -R magento:www-data .
 chmod u+x bin/magento
+chmod g+w -R generated/
 systemctl restart apache2
 
 #gen DB password
