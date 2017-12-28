@@ -15,8 +15,15 @@ mkdir /var/www/magento
 cd /var/www/magento/
 wget https://github.com/ysirawit/magento/raw/master/Magento-CE.tar.gz
 tar -xvzf Magento-CE.tar.gz
-cd /var/www/
-chown www-data:www-data -R /var/www/magento/
+
+#create user
+useradd magento
+usermod -g www-data magento
+find var vendor pub/static pub/media app/etc -type f -exec chmod g+w {} \;
+find var vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} \;
+chown -R magento:www-data .
+chmod u+x bin/magento
+systemctl restart apache2
 
 #gen DB password
 MATRIX="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -49,8 +56,9 @@ echo "* * * * * /usr/bin/php /var/www/magento/bin/magento cron:run | grep -v "Ra
 echo "* * * * * /usr/bin/php /var/www/magento/update/cron.php >> /var/www/magento/var/log/update.cron.log" >> mycron
 echo "* * * * * /usr/bin/php /var/www/magento/bin/magento setup:cron:run >> /var/www/magento/var/log/setup.cron.log" >> mycron
 #install new cron file
-crontab mycron
+crontab -u magento mycron
 rm mycron
+chown www-data:www-data -R /var/www/magento/
 
 #finish
 echo 'DONE!!!!!!!!!!! :)'
