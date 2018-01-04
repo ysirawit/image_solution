@@ -23,7 +23,7 @@ sed -i 's/;opcache.save_comments=1/opcache.save_comments=1/g' /etc/php/7.0/cli/p
 sed -i 's/zlib.output_compression = Off/zlib.output_compression = On/g' /etc/php/7.0/fpm/php.ini
 sed -i 's/zlib.output_compression = Off/zlib.output_compression = On/g' /etc/php/7.0/cli/php.ini
 
-systemct restart php7.0-fpm
+systemctl restart php7.0-fpm
 
 #prepare install magento
 mkdir /var/www/magento
