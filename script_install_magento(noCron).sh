@@ -60,7 +60,7 @@ EOF
 #write file DB config
 echo 'Database Server Host : localhost ' >> ~/install_config
 echo 'Database Server Username : magento ' >> ~/install_config
-echo 'Database Server Password : '$DB_PASSWORD' ' >> ~/install_config
+echo 'Database Server Password : '$1' ' >> ~/install_config
 echo 'Database Name : magento ' >> ~/install_config
 echo 'Table prefix : (none) ' >> ~/install_config
 
