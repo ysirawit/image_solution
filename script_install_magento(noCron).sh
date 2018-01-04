@@ -52,7 +52,7 @@ LENGTH="8"
 #create database
 mysql -u root  << EOF
 CREATE DATABASE magento;
-CREATE USER 'magento' IDENTIFIED BY '$DB_PASSWORD' ;
+CREATE USER 'magento' IDENTIFIED BY '$1' ;
 GRANT ALL PRIVILEGES ON magento.* TO 'magento';
 quit
 EOF
