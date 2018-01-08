@@ -3,13 +3,15 @@
 apt_update: true
 apt_upgrade: true
 
-#set password
-Password: 'qweasd'
-
 install_magento:
  - &install_magento |
-   curl -s https://raw.githubusercontent.com/ysirawit/image_solution/master/script_install_magento\(noCron\).sh |bash -s *Password
+   curl -s  |bash
+
+setup_crontab
+ - &setup_crontab |
+   curl -s  |bash
 
 runcmd:
  - [ sh, -c, *install_magento ]
+ - [ sh, -c, *setup_crontab ]
  - touch /tmp/done

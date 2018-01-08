@@ -10,20 +10,25 @@ sed -i 's/DocumentRoot \/var\/www/DocumentRoot \/var\/www\/magento\//g' /etc/apa
 sed -i "166s/AllowOverride None/AllowOverride All/g" /etc/apache2/apache2.conf
 systemctl restart apache2.service
 
+#edit php config 
+sed -i 's/max_execution_time = 30/max_execution_time = 3600/g' /etc/php/7.0/fpm/php.ini 
+sed -i 's/max_execution_time = 30/max_execution_time = 3600/g' /etc/php/7.0/cli/php.ini 
+
+sed -i 's/memory_limit = 128M/memory_limit = 2G/g' /etc/php/7.0/fpm/php.ini
+sed -i 's/memory_limit = 128M/memory_limit = 2G/g' /etc/php/7.0/cli/php.ini
+
+sed -i 's/;opcache.save_comments=1/opcache.save_comments=1/g' /etc/php/7.0/fpm/php.ini
+sed -i 's/;opcache.save_comments=1/opcache.save_comments=1/g' /etc/php/7.0/cli/php.ini
+
+sed -i 's/zlib.output_compression = Off/zlib.output_compression = On/g' /etc/php/7.0/fpm/php.ini
+sed -i 's/zlib.output_compression = Off/zlib.output_compression = On/g' /etc/php/7.0/cli/php.ini
+
+systemctl restart php7.0-fpm
+
 #prepare install magento
 mkdir /var/www/magento
 cd /var/www/magento/
-wget https://github.com/ysirawit/magento/raw/master/Magento-CE.tar.gz
-tar -xvzf Magento-CE.tar.gz
-
-#create user
-useradd magento
-usermod -g www-data magento
-find var vendor pub/static pub/media app/etc -type f -exec chmod g+w {} \;
-find var vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} \;
-chown -R magento:www-data .
-chmod u+x bin/magento
-systemctl restart apache2
+wget https://github.com/ysirawit/magento/raw/master/Magento-CE.tar.gz && tar -xvzf Magento-CE.tar.gz && rm Magento-CE.tar.gz
 
 #gen DB password
 MATRIX="0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -42,23 +47,32 @@ GRANT ALL PRIVILEGES ON magento.* TO 'magento';
 quit
 EOF
 
+#create user
+useradd magento
+usermod -g www-data magento
+find var vendor pub/static pub/media app/etc -type f -exec chmod g+w {} \;
+find var vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} \;
+chown -R magento:www-data .
+chmod u+x bin/magento
+chmod g+w -R generated/
+systemctl restart apache2
+echo "restart apache"
+
 #write file DB config
-echo 'Database Server Host : localhost ' >> ~/install_config
+echo 'Database Server Host : localhost ' >> ~/install_configS
 echo 'Database Server Username : magento ' >> ~/install_config
-echo 'Database Server Password : '$DB_PASSWORD' ' >> ~/install_config
+echo 'Database Server Password : '$DB_PASSWORD'' >> ~/install_config
 echo 'Database Name : magento ' >> ~/install_config
 echo 'Table prefix : (none) ' >> ~/install_config
+echo "end"
 
-#write out current crontab
-crontab -l > mycron
-#echo new cron into cron file
-echo "* * * * * /usr/bin/php /var/www/magento/bin/magento cron:run | grep -v "Ran jobs by schedule" >> /var/www/magento/var/log/magento.cron.log" >> mycron
-echo "* * * * * /usr/bin/php /var/www/magento/update/cron.php >> /var/www/magento/var/log/update.cron.log" >> mycron
-echo "* * * * * /usr/bin/php /var/www/magento/bin/magento setup:cron:run >> /var/www/magento/var/log/setup.cron.log" >> mycron
-#install new cron file
-crontab -u magento mycron
-rm mycron
-chmod g+w -R generated/
+#Install Magento CE
+cd /var/www/magento/bin
+sudo -u magento bash << EOF
+    whoami && ./magento setup:install --backend-frontname="admin" --admin-firstname="kor" --admin-lastname="za" \
+    --admin-email="a@n.com" --admin-user="admin" --admin-password="password1" --timezone="Asia/Bangkok" \
+    --db-name="magento" --db-host="localhost" --db-user="magento" --db-password="$DB_PASSWORD"
+EOF
 
 #finish
-echo 'DONE!!!!!!!!!!! :)'
+echo 'Next install Cron)'
