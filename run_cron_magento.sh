@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#slepp
+sleep 120
+
 #run Cron
 #echo new cron into cron files
 echo "* * * * * /usr/bin/php /var/www/magento/bin/magento cron:run | grep -v "Ran jobs by schedule" >> /var/www/magento/var/log/magento.cron.log" >> mycron
