@@ -75,4 +75,8 @@ sudo -u magento bash << EOF
 EOF
 
 #finish
+echo "wait"
+
+sleep 120
+
 echo 'Next install Cron)'
