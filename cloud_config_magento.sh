@@ -5,7 +5,7 @@ apt_upgrade: true
 
 install_magento:
  - &install_magento |
-   curl -s https://raw.githubusercontent.com/ysirawit/image_solution/master/script_install_magento.sh |bash
+   curl -s https://raw.githubusercontent.com/ysirawit/image_solution/master/script_install_magento.sh |bash -s "password212"
 
 setup_crontab:
  - &setup_crontab |

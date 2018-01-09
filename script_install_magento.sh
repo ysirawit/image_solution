@@ -70,8 +70,8 @@ echo "end"
 cd /var/www/magento/bin
 sudo -u magento bash << EOF
     whoami && ./magento setup:install --backend-frontname="admin" --admin-firstname="kor" --admin-lastname="za" \
-    --admin-email="a@n.com" --admin-user="admin" --admin-password="password1" --timezone="Asia/Bangkok" \
+    --admin-email="a@n.com" --admin-user="admin" --admin-password="$1" --timezone="Asia/Bangkok" \
     --db-name="magento" --db-host="localhost" --db-user="magento" --db-password="$DB_PASSWORD"
 EOF
 
-echo 'Next install Cron)'
+echo 'Next install Cron'
