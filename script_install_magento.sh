@@ -74,9 +74,5 @@ sudo -u magento bash << EOF
     --db-name="magento" --db-host="localhost" --db-user="magento" --db-password="$DB_PASSWORD"
 EOF
 
-#finish
-echo "wait"
-
-sleep 120
-
 echo 'Next install Cron)'
+
