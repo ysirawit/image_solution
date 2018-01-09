@@ -75,4 +75,3 @@ sudo -u magento bash << EOF
 EOF
 
 echo 'Next install Cron)'
-

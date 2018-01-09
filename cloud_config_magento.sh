@@ -21,5 +21,3 @@ runcmd:
  - [ sh, -c, *access_web ]
  - [ sh, -c, *setup_crontab ]
  - touch /tmp/done
-
- 
